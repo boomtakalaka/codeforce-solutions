@@ -1,0 +1,36 @@
+#!/bin/bash
+
+DIR="$PWD/$1"
+MAINC="$DIR/main.c"
+INPUTTXT="$DIR/input.txt"
+OUTPUTTXT="$DIR/output.txt"
+TEMPLATEC="$PWD/template.c"
+
+init_files() {
+    if test -f "$MAINC"; then
+        echo "main.c exists at $MAINC"
+    else
+        echo "Creating main.c at $MAINC using template at $TEMPLATEC"
+        cp "$TEMPLATEC" "$MAINC"
+    fi
+    if test -f "$INPUTTXT"; then
+        echo "input.txt exists at $INPUTTXT"
+    else
+        echo "Creating empty input.txt file at $INPUTTXT"
+        touch "$INPUTTXT"
+    fi
+    if test -f "$OUTPUTTXT"; then
+        echo "output.txt exists at $OUTPUTTXT"
+    else
+        echo "Creating empty output.txt file at $OUTPUTTXT"
+        touch "$OUTPUTTXT"
+    fi
+}
+
+if test -d "$DIR"; then
+    echo "Directory $DIR already exists"
+    init_files
+else
+    mkdir -p "$DIR"
+    init_files
+fi

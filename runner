@@ -1,0 +1,26 @@
+#!/bin/bash
+
+PROBLEM=$1
+SRC_FILE="$PWD/$PROBLEM/main.c"
+TEST_INPUT_FILE="$PWD/$PROBLEM/input.txt"
+TEST_OUTPUT_FILE="$PWD/$PROBLEM/output.txt"
+BIN_DIR="$(mktemp -d)"
+BIN_PATH="$BIN_DIR/bin"
+OUTPUT_FILE="$BIN_DIR/output"
+echo "Building solution at $SRC_FILE" 
+gcc -std=c11 -static -DONLINE_JUDGE -fno-asm -lm -s -O2 "$SRC_FILE" -o "$BIN_PATH"
+echo "Running solution binary"
+if [[ -f $TEST_INPUT_FILE && -f $TEST_OUTPUT_FILE ]]; then
+    "$BIN_PATH" < "$TEST_INPUT_FILE" > "$OUTPUT_FILE"
+    EXIT_CODE="$?"
+    if diff "$TEST_OUTPUT_FILE" "$OUTPUT_FILE"; then
+        echo "Tests pass!"
+    else
+        echo "Tests failed!"
+    fi
+else
+    "$BIN_PATH"
+    EXIT_CODE="$?"
+fi
+echo "Program exited with code $EXIT_CODE"
+rm -rf "$BIN_DIR"
